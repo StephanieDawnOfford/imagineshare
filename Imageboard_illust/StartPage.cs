@@ -8,11 +8,12 @@ namespace Imageboard_illust
 {
     /// <summary>
     /// Landing page shown when the app launches.
-    /// The user chooses between Image Board and Color Picker.
+    /// The user chooses between Individual Board, Shared Board, and Color Picker.
     /// </summary>
     public class StartPage : Panel
     {
-        public event EventHandler? ImageBoardChosen;
+        public event EventHandler? IndividualBoardChosen;
+        public event EventHandler? SharedBoardChosen;
         public event EventHandler? ColorPickerChosen;
         public event EventHandler? LogoutRequested;
 
@@ -87,7 +88,7 @@ namespace Imageboard_illust
             // ── Centre container ──────────────────────────────────
             var center = new Panel
             {
-                Width = 720,
+                Width = 1080,
                 Height = 480,
                 BackColor = Color.Transparent,
             };
@@ -116,17 +117,24 @@ namespace Imageboard_illust
             var line = new Panel
             {
                 Location = new Point(0, 90),
-                Size = new Size(720, 1),
+                Size = new Size(1080, 1),
                 BackColor = Color.FromArgb(55, 55, 65),
             };
 
-            // ── Two mode cards ────────────────────────────────────
-            var cardBoard = ModeCard(
+            // ── Three mode cards ──────────────────────────────────
+            var cardIndividual = ModeCard(
                 "🖼",
-                "Image Board",
-                "Collect images and build a visual board.\nPerfect for mood boards, references, and collections.",
+                "My Board",
+                "Create a private image board for your personal ideas and references.",
                 Color.FromArgb(0, 100, 180),
                 Color.FromArgb(0, 130, 220));
+
+            var cardShared = ModeCard(
+                "🤝",
+                "Shared Board",
+                "Open a shared board to collaborate with others.",
+                Color.FromArgb(0, 135, 110),
+                Color.FromArgb(0, 175, 140));
 
             var cardColor = ModeCard(
                 "🎨",
@@ -135,14 +143,17 @@ namespace Imageboard_illust
                 Color.FromArgb(120, 60, 160),
                 Color.FromArgb(150, 80, 200));
 
-            cardBoard.Location = new Point(0, 116);
-            cardColor.Location = new Point(380, 116);
+            cardIndividual.Location = new Point(0, 116);
+            cardShared.Location = new Point(360, 116);
+            cardColor.Location = new Point(720, 116);
 
-            cardBoard.Click += (_, _) => ImageBoardChosen?.Invoke(this, EventArgs.Empty);
+            cardIndividual.Click += (_, _) => IndividualBoardChosen?.Invoke(this, EventArgs.Empty);
+            cardShared.Click += (_, _) => SharedBoardChosen?.Invoke(this, EventArgs.Empty);
             cardColor.Click += (_, _) => ColorPickerChosen?.Invoke(this, EventArgs.Empty);
 
             // Propagate clicks to all child controls inside each card
-            PropagateClick(cardBoard, (_, _) => ImageBoardChosen?.Invoke(this, EventArgs.Empty));
+            PropagateClick(cardIndividual, (_, _) => IndividualBoardChosen?.Invoke(this, EventArgs.Empty));
+            PropagateClick(cardShared, (_, _) => SharedBoardChosen?.Invoke(this, EventArgs.Empty));
             PropagateClick(cardColor, (_, _) => ColorPickerChosen?.Invoke(this, EventArgs.Empty));
 
             // Footer hint
@@ -156,7 +167,7 @@ namespace Imageboard_illust
             };
 
             center.Controls.AddRange(new Control[]
-                { titleLbl, subLbl, line, cardBoard, cardColor, footer });
+                { titleLbl, subLbl, line, cardIndividual, cardShared, cardColor, footer });
 
             Controls.Add(center);
 

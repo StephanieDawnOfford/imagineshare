@@ -8,13 +8,12 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Imageboard_illust.Database;
 using Imageboard_illust.Models;
+using OpenQA.Selenium.Chrome;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
 
 namespace Imageboard_illust
 {
-    /// <summary>
-    /// Root window of the app.
-    /// Acts as a page container, switching between LoginForm / StartPage / ImageBoardPage / ColorPickerPage.
-    /// </summary>
     public class MainForm : Form
     {
         private readonly AppDatabase _db = new();
@@ -33,9 +32,20 @@ namespace Imageboard_illust
             ShowLoginForm();
         }
 
+        // ══════════════════════════════════════════════════════
+        //  Selenium test (temporary)
+        // ══════════════════════════════════════════════════════
+        private void TestSelenium()
+        {
+            new DriverManager().SetUpDriver(new ChromeConfig());
+
+            using var driver = new ChromeDriver();
+            driver.Url = "https://www.selenium.dev";
+            MessageBox.Show(driver.Title, "Page title");
+        }
+
         protected override void OnFormClosed(FormClosedEventArgs e)
         { _db.Dispose(); base.OnFormClosed(e); }
-
         // ══════════════════════════════════════════════════════
         //  Page switching
         // ══════════════════════════════════════════════════════
@@ -59,7 +69,8 @@ namespace Imageboard_illust
         {
             ClearPages();
             _startPage = new StartPage(_currentUser);
-            _startPage.ImageBoardChosen += (_, _) => ShowBoardTypeDialog();
+            _startPage.IndividualBoardChosen += (_, _) => CreateBoardAndShow("individual", "My Board", false);
+            _startPage.SharedBoardChosen += (_, _) => CreateBoardAndShow("shared", "Shared Board", false);
             _startPage.ColorPickerChosen += (_, _) => ShowColorPicker();
             _startPage.LogoutRequested += (_, _) => 
             {
@@ -68,6 +79,13 @@ namespace Imageboard_illust
             };
             Controls.Add(_startPage);
             Text = "Image Board Studio";
+        }
+
+        private void CreateBoardAndShow(string boardType, string boardName, bool isPublic)
+        {
+            if (_currentUser == null) return;
+            _db.InsertBoard(_currentUser.Id, boardName, boardType, isPublic);
+            ShowImageBoard();
         }
 
         private void ShowBoardTypeDialog()
