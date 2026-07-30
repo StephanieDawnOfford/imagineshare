@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Imageboard_illust.Database;
 using Imageboard_illust.Models;
-using OpenQA.Selenium.Chrome;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
 
 namespace Imageboard_illust
 {
@@ -29,19 +26,7 @@ namespace Imageboard_illust
             MinimumSize = new Size(960, 640);
             BackColor = Color.FromArgb(22, 22, 26);
 
-            ShowLoginForm();
-        }
-
-        // ══════════════════════════════════════════════════════
-        //  Selenium test (temporary)
-        // ══════════════════════════════════════════════════════
-        private void TestSelenium()
-        {
-            new DriverManager().SetUpDriver(new ChromeConfig());
-
-            using var driver = new ChromeDriver();
-            driver.Url = "https://www.selenium.dev";
-            MessageBox.Show(driver.Title, "Page title");
+            ShowIntroPage();
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -49,6 +34,15 @@ namespace Imageboard_illust
         // ══════════════════════════════════════════════════════
         //  Page switching
         // ══════════════════════════════════════════════════════
+
+        private void ShowIntroPage()
+        {
+            ClearPages();
+            var introPage = new IntroPage();
+            introPage.ContinueRequested += (_, _) => ShowLoginForm();
+            Controls.Add(introPage);
+            Text = "Image Board Studio";
+        }
 
         private void ShowLoginForm()
         {
