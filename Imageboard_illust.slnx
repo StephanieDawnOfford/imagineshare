@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="Imageboard_illust.Core/Imageboard_illust.Core.csproj" />
+  <Project Path="Imageboard_illust.Web/Imageboard_illust.Web.csproj" />
   <Project Path="Imageboard_illust/Imageboard_illust.csproj" />
 </Solution>
