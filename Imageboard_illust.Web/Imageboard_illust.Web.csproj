@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Imageboard_illust.Core\Imageboard_illust.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,10 +1,26 @@
 ﻿@page
-@model IndexModel
+@model Imageboard_illust.Web.Pages.IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-5">
+    <h1 class="display-4">Imageboard Web</h1>
+    <p class="lead">A simple website version of your image board app with login, registration, and board management.</p>
+
+    @if (Model.IsAuthenticated)
+    {
+        <div class="mt-4">
+            <p>You are logged in as <strong>@Model.UserEmail</strong>.</p>
+            <a class="btn btn-primary" asp-page="/Boards">Go to My Boards</a>
+            <a class="btn btn-link" asp-page="/Privacy">Privacy</a>
+        </div>
+    }
+    else
+    {
+        <div class="mt-4">
+            <a class="btn btn-primary me-2" asp-page="/Login">Login</a>
+            <a class="btn btn-outline-primary" asp-page="/Register">Register</a>
+        </div>
+    }
 </div>
