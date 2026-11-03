@@ -57,6 +57,13 @@ namespace Imageboard_illust
                 }
             };
             loginForm.ShowDialog(this);
+
+            // If the dialog was closed (e.g. the window's Close button) instead of completing a
+            // login, the screen was left blank since ClearPages() already ran above. Fall back home.
+            if (_currentUser == null)
+            {
+                ShowIntroPage();
+            }
         }
 
         private void ShowStartPage()
